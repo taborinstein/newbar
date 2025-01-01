@@ -3,6 +3,7 @@ use std::{time::Duration, env};
 
 mod render;
 mod audio;
+mod df;
 
 
 
@@ -14,7 +15,8 @@ struct Store {
     num_workspaces: i32,
     hypr_path: String,
     cpu: render::cpu::CPU,
-    mem: f32
+    mem: f32,
+    df: f32
 }
 
 use gtk::{cairo, gdk, glib, prelude::*};
@@ -36,6 +38,8 @@ fn draw_func(cr: &cairo::Context, clk: i32, store: &mut Store) {
     render::cpu::cpu(cr, node_pos, clk, store);
     node_pos -= 120.0;
     render::mem::mem(cr, node_pos, clk, store);
+    node_pos -= 120.0;
+    render::disk::disk(cr, node_pos, clk, store);
     node_pos = 0.0;
     render::workspace::wkspc(cr, node_pos, clk, store);
 }
@@ -88,7 +92,8 @@ fn activate(application: &gtk::Application) {
             total: 1,
             percentage: 0.0
         },
-        mem: 0.0
+        mem: 0.0,
+        df: 0.0
     };
     canvas.set_draw_func(move |_area: &gtk::DrawingArea, cr: &cairo::Context, _width: i32, _height: i32| {
         draw_func(cr, clk, &mut store);

@@ -4,11 +4,13 @@ pub mod battery;
 pub mod workspace;
 pub mod cpu;
 pub mod mem;
+pub mod disk;
 
 use std::f64::consts::PI;
 
 use gtk::cairo;
 use super::audio;
+use super::df;
 
 pub fn fullwidth_grad(cr: &cairo::Context) {
     let pat = cairo::LinearGradient::new(0.0, 15.0, 1920.0 - 5.0, 15.0);

@@ -5,6 +5,8 @@
 #include <pthread.h>
 #include <stdlib.h>
 
+#define UNUSED(x) (void)(x)
+
 float fl = 0.0;
 int muted = 0;
 int thread_status = -1;
@@ -25,6 +27,9 @@ void vol_stop() {
 }
 
 void sink_info_callback(pa_context *c, const pa_sink_info *i, int eol, void *userdata) {
+    UNUSED(c);
+    UNUSED(eol);
+    UNUSED(userdata);
     if (i) {
         float volume = (float)pa_cvolume_avg(&(i->volume)) / (float)PA_VOLUME_NORM;
         muted = i->mute;
@@ -41,6 +46,7 @@ void server_info_callback(pa_context *c, const pa_server_info *i, void *userdata
 }
 
 void subscribe_callback(pa_context *c, pa_subscription_event_type_t type, uint32_t idx, void *userdata) {
+    UNUSED(type);
     pa_operation *op = pa_context_get_sink_info_by_index(c, idx, sink_info_callback, userdata);
     if (op) pa_operation_unref(op);
 }
@@ -62,6 +68,7 @@ void context_state_callback(pa_context *c, void *userdata) {
 }
 
 void *run(void *arg) {
+    UNUSED(arg);
     thread_status = 1;
     pa_mainloop_run(mainloop, NULL);
     return NULL;
